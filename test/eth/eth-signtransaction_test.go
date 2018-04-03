@@ -13,30 +13,50 @@
 *********************************************************************************/
 
 /**
- * @file block.go
+ * @file eth-signtransaction_test.go
  * @authors:
- *   Jérôme Laurens <jeromelaurens@gmail.com>
+ *   Reginaldo Costa <regcostajr@gmail.com>
  * @date 2017
  */
-
-package dto
+package test
 
 import (
-	// "encoding/json"
-	// "fmt"
-	// "strconv"
+	"testing"
 
+	"github.com/regcostajr/go-web3"
 	"github.com/regcostajr/go-web3/complex/types"
+	"github.com/regcostajr/go-web3/dto"
+	"github.com/regcostajr/go-web3/providers"
+	"math/big"
 )
 
-type Block struct {
-	Number     types.ComplexIntResponse `json:"number"`
-	Hash       string                   `json:"hash"`
-	ParentHash string                   `json:"parentHash"`
-	Author     string                   `json:"author,omitempty"`
-	Miner      string                   `json:"miner,omitempty"`
-	Size       types.ComplexIntResponse `json:"size"`
-	GasUsed    types.ComplexIntResponse `json:"gasUsed"`
-	Nonce      types.ComplexIntResponse `json:"nonce"`
-	Timestamp  types.ComplexIntResponse `json:"timestamp"`
+func TestEthSignTransaction(t *testing.T) {
+
+	var connection = web3.NewWeb3(providers.NewHTTPProvider("127.0.0.1:8545", 10, false))
+
+	coinbase, err := connection.Eth.GetCoinbase()
+
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+
+	transaction := new(dto.TransactionParameters)
+	transaction.Nonce = big.NewInt(5)
+	transaction.From = coinbase
+	transaction.To = coinbase
+	transaction.Value = big.NewInt(0).Mul(big.NewInt(500), big.NewInt(1E18))
+	transaction.Gas = big.NewInt(40000)
+	transaction.GasPrice = big.NewInt(1E9)
+	transaction.Data = types.ComplexString("p2p transaction")
+
+	txID, err := connection.Eth.SignTransaction(transaction)
+
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+
+	t.Log(txID)
+
 }

@@ -1,5 +1,7 @@
 # Ethereum Go Client
 
+[![Build Status](https://travis-ci.org/regcostajr/go-web3.svg?branch=master)](https://travis-ci.org/regcostajr/go-web3)
+
 This is a Ethereum compatible Go Client
 which implements the 
 [Eth JSON RPC Module](https://github.com/ethereum/wiki/wiki/JSON-RPC),
@@ -116,7 +118,7 @@ TODO List
 - [ ] ![](https://placehold.it/15/008080/000000?text=+) eth_getBlockByNumber                    
 - [x] eth_getTransactionByHash                
 - [ ] eth_getTransactionByBlockHashAndIndex   
-- [ ] eth_getTransactionByBlockNumberAndIndex 
+- [x] eth_getTransactionByBlockNumberAndIndex 
 - [x] eth_getTransactionReceipt               
 - [ ] eth_getUncleByBlockHashAndIndex         
 - [ ] eth_getUncleByBlockNumberAndIndex       

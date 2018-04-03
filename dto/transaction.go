@@ -30,6 +30,7 @@ import (
 type TransactionParameters struct {
 	From     string
 	To       string
+	Nonce    *big.Int
 	Gas      *big.Int
 	GasPrice *big.Int
 	Value    *big.Int
@@ -40,6 +41,7 @@ type TransactionParameters struct {
 type RequestTransactionParameters struct {
 	From     string `json:"from"`
 	To       string `json:"to,omitempty"`
+	Nonce    string `json:"nonce,omitempty"`
 	Gas      string `json:"gas,omitempty"`
 	GasPrice string `json:"gasPrice,omitempty"`
 	Value    string `json:"value,omitempty"`
@@ -52,6 +54,9 @@ func (params *TransactionParameters) Transform() *RequestTransactionParameters {
 	request.From = params.From
 	if params.To != "" {
 		request.To = params.To
+	}
+	if params.Nonce != nil {
+		request.Nonce = "0x" + params.Nonce.Text(16)
 	}
 	if params.Gas != nil {
 		request.Gas = "0x" + params.Gas.Text(16)
@@ -68,14 +73,20 @@ func (params *TransactionParameters) Transform() *RequestTransactionParameters {
 	return request
 }
 
+type SignTransactionResponse struct {
+	Raw              types.ComplexString      `json:"raw"`
+	Transaction      TransactionResponse      `json:"tx"`
+}
+
 type TransactionResponse struct {
 	Hash             string                   `json:"hash"`
 	Nonce            int                      `json:"nonce"`
 	BlockHash        string                   `json:"blockHash"`
-	BlockNumber      int64                    `json:"blockNumber"`
-	TransactionIndex int64                    `json:"transactionIndex"`
+	BlockNumber      types.ComplexIntResponse `json:"blockNumber"`
+	TransactionIndex types.ComplexIntResponse `json:"transactionIndex"`
 	From             string                   `json:"from"`
 	To               string                   `json:"to"`
+	Input            string                   `json:"input"`
 	Value            types.ComplexIntResponse `json:"value"`
 	GasPrice         types.ComplexIntResponse `json:"gasPrice,omitempty"`
 	Gas              types.ComplexIntResponse `json:"gas,omitempty"`
